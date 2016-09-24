@@ -21,6 +21,7 @@ function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
+	game.load.image('faces', 'assets/f1.jpg');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
 }
@@ -48,7 +49,7 @@ function create() {
     platforms.enableBody = true;
 
     // Here we create the ground.
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
+    var ground = platforms.create(0, game.world.height - 20, 'ground');
 
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     ground.scale.setTo(2, 2);
@@ -91,7 +92,7 @@ function create() {
         var star = stars.create(i * 70, 0, 'star');
 
         //  Let gravity do its thing
-        star.body.gravity.y = 300;
+        star.body.gravity.y = 300 *Math.random();
 
         //  This just gives each star a slightly random bounce value
         star.body.bounce.y = 0.7 + Math.random() * 0.2;
@@ -155,6 +156,12 @@ function collectStar (player, star) {
     //  Add and update the score
     score += 10;
     scoreText.text = 'Score: ' + score;
+	
+	if(score == 120)
+	{
+		//  A simple background for our game
+		game.add.sprite(0, 0, 'faces');
+	} 	
 
 }
 
