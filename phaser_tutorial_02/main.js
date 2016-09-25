@@ -216,6 +216,7 @@ function collectStar (player, star) {
 		
 		//  A simple background for our game
 		lvlComplete = game.add.sprite(50, 0, 'faces');
+		lvlComplete.outOfBoundsKill = true;
 		tada.play();
 	} 	
 
