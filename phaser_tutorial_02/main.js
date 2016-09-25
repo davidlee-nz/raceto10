@@ -16,6 +16,9 @@ function preload() {
 	game.load.audio('meow2', 'assets/audio/meow2.mp3');
 	game.load.audio('tada', 'assets/audio/tada.mp3');
 	
+	game.load.audio('jump', 'assets/audio/jump_08.wav');
+	
+	
 	game.load.audio('soundtrack', 'assets/audio/oedipus_ark_pandora.mp3');
 	
 
@@ -107,6 +110,7 @@ function create() {
 
 	meow2 = game.add.audio('meow2');
 	tada = game.add.audio('tada');
+	jump = game.add.audio('jump');
 	soundtrack = game.add.audio('soundtrack');
 	
 	soundtrack.play();
@@ -143,6 +147,9 @@ function start() {
   
 
 }
+
+
+var lvlComplete;
 
 function update() {
 
@@ -181,9 +188,14 @@ function update() {
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && player.body.touching.down)
     {
+		jump.play();
         player.body.velocity.y = -350;
     }
 
+	if(lvlComplete)
+	{
+		lvlComplete.y += 5;
+	}
 }
 
 function collectStar (player, star) {
@@ -194,7 +206,7 @@ function collectStar (player, star) {
     star.kill();
 
     //  Add and update the score
-    score += 10;
+    score += 120;
     scoreText.text = 'Score: ' + score;
 	
 	if(score == 120)
@@ -203,7 +215,7 @@ function collectStar (player, star) {
 		meow2.stop();
 		
 		//  A simple background for our game
-		game.add.sprite(0, 0, 'faces');
+		lvlComplete = game.add.sprite(50, 0, 'faces');
 		tada.play();
 	} 	
 
