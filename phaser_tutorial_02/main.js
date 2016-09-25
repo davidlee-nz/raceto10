@@ -9,19 +9,23 @@ function preload() {
     game.load.image('star', 'assets/star.png');
 	game.load.image('faces', 'assets/f1.jpg');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+	game.load.image('baddie', 'assets/invader.png');
 	
 	
 	// Audio
 	
-	game.load.audio('meow2', 'assets/audio/meow2.mp3');
+	//game.load.audio('meow2', 'assets/audio/meow2.mp3');
+	game.load.audio('meow2', 'assets/audio/pointnoise.mp3');
 	game.load.audio('tada', 'assets/audio/tada.mp3');
+	
+	game.load.audio('gameover', 'assets/audio/gameover1.mp3');
 	
 	game.load.audio('jump', 'assets/audio/jump_08.wav');
 	
 	
-	game.load.audio('soundtrack', 'assets/audio/oedipus_ark_pandora.mp3');
+	//game.load.audio('soundtrack', 'assets/audio/oedipus_ark_pandora.mp3');
 	
-
+	game.load.audio('soundtrack', 'assets/audio/backgroundmusic.mp3');
 }
 
 
@@ -101,6 +105,16 @@ function create() {
         star.body.bounce.y = 0.7 + Math.random() * 0.2;
     }
 
+	// The baddie
+	baddie = game.add.sprite(32, 25, 'baddie');
+	game.physics.arcade.enable(baddie);
+	baddie.body.velocity.x = 100;
+	baddie.body.velocity.y = 100;
+	baddie.body.bounce.x = 1;
+	baddie.body.bounce.y = 1;
+	baddie.body.collideWorldBounds = true;
+	
+	
     //  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -111,6 +125,9 @@ function create() {
 	meow2 = game.add.audio('meow2');
 	tada = game.add.audio('tada');
 	jump = game.add.audio('jump');
+	
+	gameover = game.add.audio('gameover');
+	
 	soundtrack = game.add.audio('soundtrack');
 	
 	soundtrack.play();
@@ -149,14 +166,28 @@ function start() {
 }
 
 
+function gameOver()
+{
+	gameover.play();
+}
+
 var lvlComplete;
 
 function update() {
 
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(player, platforms);
+	game.physics.arcade.collide(baddie, platforms);
     game.physics.arcade.collide(stars, platforms);
 
+	// Check baddie hit
+	game.physics.arcade.overlap(player, baddie, function() 
+	{
+		gameOver();
+	}		
+	
+	, null, this);
+	
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     game.physics.arcade.overlap(player, stars, collectStar, null, this);
 
@@ -211,8 +242,10 @@ function collectStar (player, star) {
 	
 	if(score == 120)
 	{
-		soundtrack.stop();
+		//soundtrack.stop();
 		meow2.stop();
+		
+		soundtrack.fadeOut(1000);
 		
 		//  A simple background for our game
 		lvlComplete = game.add.sprite(50, 0, 'faces');
