@@ -206,7 +206,7 @@ function collectStar (player, star) {
     star.kill();
 
     //  Add and update the score
-    score += 120;
+    score += 10;
     scoreText.text = 'Score: ' + score;
 	
 	if(score == 120)
