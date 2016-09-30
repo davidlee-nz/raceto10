@@ -174,6 +174,7 @@ function start() {
 function gameOver()
 {
 	gameover.play();
+	game.state.start('lvl1');
 }
 
 function  collectStar(player, star) {
@@ -184,8 +185,8 @@ function  collectStar(player, star) {
     star.kill();
 
     //  Add and update the score
-    this.score += 10;
-    this.scoreText.text = 'Score: ' + this.score;
+    score += 10;
+    scoreText.text = 'Score: ' + score;
 	
 	if(score == 120)
 	{
@@ -218,7 +219,7 @@ function update() {
 	, null, this);
 	
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
+    game.physics.arcade.overlap(player, stars, collectStar, null, this);
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
@@ -257,9 +258,9 @@ function update() {
         player.body.velocity.y = -350;
     }
 
-	if(this.lvlComplete)
+	if(lvlComplete)
 	{
-		this.lvlComplete.y += 5;
+		lvlComplete.y += 5;
 	}
 }
 
