@@ -12,6 +12,8 @@ function preload() {
 	game.load.image('baddie', 'assets/invader.png');
 	
 	
+	//Dave woz here!!
+	
 	// Audio
 	
 	//game.load.audio('meow2', 'assets/audio/meow2.mp3');
