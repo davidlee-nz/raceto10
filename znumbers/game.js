@@ -24,7 +24,9 @@ var gameOptions = {
 	gameHeight: 700,
 
      // tile size, in pixels
-    tileSize: 100,
+    tileSize: 80,
+
+    bannerSize: 100,
 
     // field size, an object
 	fieldSize: {
@@ -110,7 +112,7 @@ TheGame.prototype = {
 
         // we are centering the group horizontally and keeping the same margin from the bottom
         this.tileGroup.x = (game.width - gameOptions.tileSize * gameOptions.fieldSize.cols) / 2;
-        this.tileGroup.y = (game.height - gameOptions.tileSize * gameOptions.fieldSize.rows) / 2;
+        this.tileGroup.y = ((game.height -gameOptions.bannerSize) - gameOptions.tileSize * gameOptions.fieldSize.rows) / 2;
 
         // two loops to create a grid made by "gameOptions.fieldSize.rows" x "gameOptions.fieldSize.cols" columns
   		for(var i = 0; i < gameOptions.fieldSize.rows; i++){
@@ -132,6 +134,8 @@ TheGame.prototype = {
         // determining x and y tile position according to tile size
 		var tileXPos = col * gameOptions.tileSize + gameOptions.tileSize / 2;
 		var tileYPos = row * gameOptions.tileSize + gameOptions.tileSize / 2;
+
+        tileYPos += gameOptions.bannerSize;
 
         // tile is added as an image
         var theTile = game.add.sprite(tileXPos, tileYPos, "tiles");
