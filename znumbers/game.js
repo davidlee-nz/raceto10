@@ -13,6 +13,11 @@ var levels = [
     ]
 ];
 
+var targetCords = [0, 0];
+
+var gameScore = 0;
+
+
 // this object contains all customizable game options
 // changing them will affect gameplay
 var gameOptions = {
@@ -114,6 +119,8 @@ TheGame.prototype = {
         this.tileGroup.x = (game.width - gameOptions.tileSize * gameOptions.fieldSize.cols) / 2;
         this.tileGroup.y = ((game.height -gameOptions.bannerSize) - gameOptions.tileSize * gameOptions.fieldSize.rows) / 2;
 
+        this.newRound();
+
         // two loops to create a grid made by "gameOptions.fieldSize.rows" x "gameOptions.fieldSize.cols" columns
   		for(var i = 0; i < gameOptions.fieldSize.rows; i++){
             this.tilesArray[i] = [];
@@ -199,6 +206,7 @@ if (col == 0 && row == 0)
         // also adding it to "tileGroup" group
 	    this.tileGroup.add(theTile);
 
+        this.updateBanner();
 	},
 
     // this function is executed at each user input (click or touch)
@@ -285,6 +293,37 @@ if (col == 0 && row == 0)
                 this.possibleLanding.length = 0;
             }
         }
+    },
+
+    updateBanner: function() {
+        //console.error("updating banner!!");
+
+        // Writing the cords
+        var str = targetCords[0] + " , " + targetCords[1];
+
+        var t1 = game.add.text(350,50, str, {
+            font: (gameOptions.tileSize / 1).toString() + "px Arial",
+            fontWeight: "bold"
+        });
+
+        // setting tile number registration point to the center
+        t1.anchor.set(0.5);
+
+
+        // Writing the score
+        var t1 = game.add.text(650,50, gameScore, {
+            font: (gameOptions.tileSize / 2).toString() + "px Arial",
+            fontWeight: "bold"
+        });
+
+        // setting tile number registration point to the center
+        t1.anchor.set(0.5);
+  
+    },
+
+    newRound: function() {
+        targetCords[0] = Math.floor(Math.random() * 6) + 1;
+        targetCords[1] = Math.floor(Math.random() * 6) + 1;
     },
 
     // defines the tile tween
