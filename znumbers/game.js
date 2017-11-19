@@ -70,6 +70,9 @@ window.onload = function() {
 
     // launching "TheGame" state
     game.state.start("TheGame");
+
+   
+
 }
 
 /* ****************** TheGame state ****************** */
@@ -86,6 +89,11 @@ TheGame.prototype = {
 
         // load the only graphic asset in the game, a white tile which will be tinted on the fly
         game.load.image("tiles", "assets/sprites/tile.png");
+
+        game.load.audio('gameover', 'assets/audio/gameover1.mp3');
+        
+       
+        
     },
 
     // function to be executed as soon as the game has completely loaded
@@ -100,8 +108,12 @@ TheGame.prototype = {
         // vertically centering the game
 		game.scale.pageAlignVertically = true;
 
+        this.gameoverSound = game.add.audio('gameover');
+
         // this function will create the level
-  		this.createLevel();
+          this.createLevel();
+          
+
   	},
 
 	createLevel: function(){
@@ -232,27 +244,31 @@ if (col == 0 && row == 0)
             // getting tile value
             var pickedValue = pickedTile.value;
 
-            console.error("got tile: " + pickedRow + ", " + pickedCol);
+            //console.error("got tile: " + pickedRow + ", " + pickedCol);
 
-            // if it's a legal tile...
-            //if(pickedValue > 0){
 
-                // saving picked tile coordinate
-                this.saveTile = new Phaser.Point(pickedRow, pickedCol);
+            // saving picked tile coordinate
+            this.saveTile = new Phaser.Point(pickedRow, pickedCol);
 
-            
-                if ( pickedRow == targetCords[1] && pickedCol == targetCords[0] )
-                {
-                    // User selected correct square
+        
+            if ( pickedRow == targetCords[1] && pickedCol == targetCords[0] )
+            {
+                // User selected correct square
 
-                    // tween the tile
-                    this.setTileTweens(pickedTile.tileSprite, 0.2);
+                // tween the tile
+                this.setTileTweens(pickedTile.tileSprite, 0.2);
 
-                    gameScore += 1;
+                gameScore += 1;
 
-                    this.newRound();
-                    this.updateBanner();
-                }
+                this.newRound();
+                this.updateBanner();
+            }
+        else {
+            this.gameoverSound.play();
+            gameScore = 0;
+            this.newRound();
+            this.updateBanner();
+        }
 
         }
     },
@@ -300,7 +316,7 @@ if (col == 0 && row == 0)
         this.pulseTween = game.add.tween(tile).to({
             width: gameOptions.tileSize * scaling,
             height: gameOptions.tileSize * scaling
-        }, 200, Phaser.Easing.Cubic.InOut, true, 0, -1, true);
+        }, 200, Phaser.Easing.Cubic.InOut, true, 0, 0, true);
     },
 
     // this function reset all tile tweens
