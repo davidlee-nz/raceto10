@@ -217,14 +217,14 @@ if (col == 0 && row == 0)
 
         // determining x and y position of the input inside tileGroup
         var posX = e.x - this.tileGroup.x;
-        var posY = e.y - this.tileGroup.y;
+        var posY = e.y - this.tileGroup.y - gameOptions.bannerSize;
 
         // transforming coordinates into actual rows and columns
         var pickedRow = Math.floor(posY / gameOptions.tileSize);
         var pickedCol = Math.floor(posX / gameOptions.tileSize);
 
         // checking if row and column are inside the actual game field
-        if(pickedRow >= 0 && pickedCol >= 0 && pickedRow < gameOptions.fieldSize.rows && pickedCol < gameOptions.fieldSize.cols){
+        if(pickedRow > 0 && pickedCol > 0 && pickedRow < gameOptions.fieldSize.rows && pickedCol < gameOptions.fieldSize.cols){
 
             // this is the tile we picked
             var pickedTile = this.tilesArray[pickedRow][pickedCol];
@@ -232,71 +232,38 @@ if (col == 0 && row == 0)
             // getting tile value
             var pickedValue = pickedTile.value;
 
+            console.error("got tile: " + pickedRow + ", " + pickedCol);
+
             // if it's a legal tile...
-            if(pickedValue > 0){
+            //if(pickedValue > 0){
 
                 // saving picked tile coordinate
                 this.saveTile = new Phaser.Point(pickedRow, pickedCol);
 
-                // here we will place the possible landing tiles, if ones
-                this.possibleLanding = [];
-                this.possibleLanding.length = 0;
+            
+                if ( pickedRow == targetCords[1] && pickedCol == targetCords[0] )
+                {
+                    // User selected correct square
 
-                // tween the tile
-                this.setTileTweens(pickedTile.tileSprite, 0.2);
+                    // tween the tile
+                    this.setTileTweens(pickedTile.tileSprite, 0.2);
 
-                // looping through all directions
-                for(var i = 0; i < gameOptions.directions.length; i++){
+                    gameScore += 1;
 
-                    // determining new coordinates
-                    var newRow = pickedRow + pickedValue * gameOptions.directions[i].x;
-                    var newCol = pickedCol + pickedValue * gameOptions.directions[i].y;
-
-                    // are we on a legal tile?
-                    if(newRow < gameOptions.fieldSize.rows && newRow >= 0 && newCol < gameOptions.fieldSize.cols && newCol >=0 && this.tilesArray[newRow][newCol].value == 0){
-
-                        // we tween the tile
-                        this.setTileTweens(this.tilesArray[newRow][newCol].tileSprite, 0.5);
-
-                        // this tile is a possible landing tile
-                        this.possibleLanding.push(new Phaser.Point(newRow, newCol));
-                    }
-                }
-            }
-            // it's not a legal tile. Maybe a possible landing?
-            else{
-
-                // check if the picked tile is in the array of possible landings
-                if(this.pointInArray(new Phaser.Point(pickedRow, pickedCol))){
-
-                    // this tile can't be picked anymore
-                    this.tilesArray[pickedRow][pickedCol].value = -1;
-
-                    // showing tile text
-                    this.tilesArray[pickedRow][pickedCol].text.alpha = 0.5;
-
-                    // setting destination tile text as source tile value
-                    this.tilesArray[pickedRow][pickedCol].text.text = this.tilesArray[this.saveTile.x][this.saveTile.y].value.toString();
-
-                    // empty source tile
-                    this.tilesArray[this.saveTile.x][this.saveTile.y].value = 0;
-
-                    // change source tile color
-                    this.tilesArray[this.saveTile.x][this.saveTile.y].tileSprite.tint = gameOptions.colors[0];
-
-                    // hiding tile text
-                    this.tilesArray[this.saveTile.x][this.saveTile.y].text.alpha = 0;
+                    this.newRound();
+                    this.updateBanner();
                 }
 
-                // empty possibleLanding array
-                this.possibleLanding = [];
-                this.possibleLanding.length = 0;
-            }
         }
     },
 
     updateBanner: function() {
         //console.error("updating banner!!");
+
+        var graphics = game.add.graphics();
+        graphics.beginFill(0xffffff);
+        graphics.drawRect(0, 0, 700, 100);
+        graphics.endFill();
 
         // Writing the cords
         var str = targetCords[0] + " , " + targetCords[1];
